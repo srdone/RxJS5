@@ -21,3 +21,9 @@ class MyObserver implements Observer<number> {
 
 source.subscribe(new MyObserver());
 source.subscribe(new MyObserver());
+
+source.subscribe(
+    v => console.log(`value: ${v}`),
+    e => console.log(`error: ${e}`),
+    () => console.log('complete')
+)
