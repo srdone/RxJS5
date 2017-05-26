@@ -25,6 +25,12 @@ function load(url: string) {
     .retryWhen(retryStrategy({attempts: 3, delay: 1500}));
 }
 
+function loadWithFetch(url: string) {
+    return Observable.defer(() => {
+        return Observable.fromPromise(fetch(url).then(r => r.json()));
+    })
+}
+
 function retryStrategy({attempts = 4, delay = 1000}) {
     return function (errors : Observable<any>) {
         return errors
@@ -45,12 +51,12 @@ function renderMovies(movies) {
     });
 }
 
-//load("movies.json").subscribe(renderMovies);
+loadWithFetch("movies.json").subscribe(renderMovies);
 
 click
-    .flatMap(e => load("moviess.json"))
+    .flatMap(e => loadWithFetch("movies.json"))
     .subscribe(
-    renderMovies,
-    e => console.error(`error: ${e}`),
-    () => console.log("complete")
-    )
+        renderMovies,
+        e => console.error(`error: ${e}`),
+        () => console.log("complete")
+    );
